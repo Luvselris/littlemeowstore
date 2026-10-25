@@ -214,7 +214,7 @@
       text-overflow: ellipsis;
     }
 
-    /* 4. สไลเดอร์เลื่อน ซ้าย-ขวา */
+    /* สไตล์กรอบใหญ่สไลเดอร์ผลงาน */
     .slider-section-card {
       background: var(--card-white);
       border: 2px solid var(--border-pink);
@@ -224,7 +224,6 @@
       position: relative;
     }
     
-    /* หัวข้อ "รวมกลุ่มของตกแต่ง" โทนสีเดียวกับเว็บ */
     .slider-title-header {
       font-size: 13.5px;
       font-weight: 700;
@@ -272,7 +271,6 @@
     }
     .carousel-img-frame:active img { transform: scale(0.96); }
 
-    /* ข้อความคำอธิบายใต้รูป */
     .carousel-desc-text {
       font-size: 11.5px;
       color: var(--text-muted);
@@ -283,7 +281,6 @@
       min-height: 16px;
     }
 
-    /* ปุ่ม ex */
     .btn-ex-label {
       display: inline-block;
       padding: 4px 22px;
@@ -376,11 +373,8 @@
       <div class="inner-small-grid" id="smallBoxesContainer"></div>
     </div>
 
-    <!-- 4. ส่วนล่างสุด: สไลเดอร์เลื่อน ซ้าย-ขวา มีหัวข้อ "รวมกลุ่มของตกแต่ง" -->
-    <div class="slider-section-card">
-      <div class="slider-title-header" id="sliderHeadingText">รวมกลุ่มของตกแต่ง</div>
-      <div class="carousel-wrap" id="sliderContainer"></div>
-    </div>
+    <!-- 4. พื้นที่แสดงกรอบใหญ่สไลเดอร์ผลงานรวม 5 กรอบ -->
+    <div id="allSliderSectionsWrapper" style="display:flex; flex-direction:column; gap:15px;"></div>
 
   </div>
 
@@ -396,7 +390,6 @@
     const DB_CONFIG = "littlemeow_site_config";
     const DB_DUO = "littlemeow_banner_cards";
     const DB_BOXES = "littlemeow_contact_boxes";
-    const DB_SLIDER = "littlemeow_slider_posts";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCpAGDSy1NRgmLV_g7qJrCpwOhU9MrfQyY",
@@ -433,6 +426,7 @@
       }, { passive: true });
     });
 
+    // โหลดข้อมูลส่วนหัว
     db.collection(DB_CONFIG).doc("main").onSnapshot(doc => {
       if (doc.exists) {
         const d = doc.data();
@@ -443,7 +437,6 @@
         if (d.bio !== undefined) document.getElementById("mainStoreBio").textContent = d.bio;
         if (d.bannerImg) document.getElementById("mainBanner").src = d.bannerImg;
         if (d.profileImg) document.getElementById("mainProfile").src = d.profileImg;
-        if (d.sliderHeading) document.getElementById("sliderHeadingText").textContent = d.sliderHeading;
         if (d.musicUrl && !music.src.endsWith(d.musicUrl)) {
           music.src = d.musicUrl;
           startMusic();
@@ -451,6 +444,7 @@
       }
     });
 
+    // โหลดรูปคู่ 2 ช่อง
     db.collection(DB_DUO).orderBy("order", "asc").onSnapshot(snap => {
       const container = document.getElementById("duoCardsContainer");
       container.innerHTML = "";
@@ -469,6 +463,7 @@
       });
     });
 
+    // โหลด 6 กรอบเล็ก
     db.collection(DB_BOXES).orderBy("order", "asc").onSnapshot(snap => {
       const container = document.getElementById("smallBoxesContainer");
       container.innerHTML = "";
@@ -492,30 +487,59 @@
       });
     });
 
-    // แสดงสไลเดอร์: รูป ➔ คำอธิบาย ➔ ปุ่ม ex
-    db.collection(DB_SLIDER).orderBy("order", "asc").onSnapshot(snap => {
-      const container = document.getElementById("sliderContainer");
-      container.innerHTML = "";
-      if (snap.empty) {
-        container.innerHTML = `<p style="text-align:center; font-size:12px; color:var(--text-muted); padding:20px; width:100%;">ยังไม่มีผลงานในสไลด์</p>`;
-        return;
-      }
-      snap.forEach(doc => {
-        const d = doc.data();
-        const div = document.createElement("div");
-        div.className = "carousel-slide-item";
-        div.innerHTML = `
-          <div class="carousel-img-frame" onclick="openImgModal('${d.image}')">
-            <img src="${d.image}" alt="Slide">
-          </div>
-          <div class="carousel-desc-text">${d.desc || ''}</div>
-          <a href="${d.link || 'javascript:void(0)'}" ${d.link && d.link.startsWith('http') ? 'target="_blank"' : ''} class="btn-ex-label">
-            ${d.btnText || 'ex'}
-          </a>
-        `;
-        container.appendChild(div);
+    // โหลดและเรนเดอร์ 5 กรอบใหญ่สไลเดอร์ผลงาน
+    const TOTAL_SECTIONS = 5;
+    const allWrapper = document.getElementById("allSliderSectionsWrapper");
+    allWrapper.innerHTML = "";
+
+    // สร้างโครง 5 กรอบรอไว้
+    for (let sIdx = 0; sIdx < TOTAL_SECTIONS; sIdx++) {
+      const secCard = document.createElement("div");
+      secCard.className = "slider-section-card";
+      secCard.id = `slider-section-${sIdx}`;
+      secCard.innerHTML = `
+        <div class="slider-title-header" id="slider-header-${sIdx}">รวมกลุ่มของตกแต่ง ${sIdx + 1}</div>
+        <div class="carousel-wrap" id="slider-track-${sIdx}">
+          <p style="text-align:center; font-size:12px; color:var(--text-muted); padding:15px; width:100%;">กำลังโหลดผลงาน...</p>
+        </div>
+      `;
+      allWrapper.appendChild(secCard);
+
+      // ดึงหัวข้อของแต่ละกรอบ
+      db.collection(DB_CONFIG).doc(`slider_meta_${sIdx}`).onSnapshot(metaDoc => {
+        const titleEl = document.getElementById(`slider-header-${sIdx}`);
+        if (metaDoc.exists && metaDoc.data().heading) {
+          titleEl.textContent = metaDoc.data().heading;
+        } else {
+          titleEl.textContent = sIdx === 0 ? "รวมกลุ่มของตกแต่ง" : `รวมกลุ่มของตกแต่ง ${sIdx + 1}`;
+        }
       });
-    });
+
+      // ดึงภาพสไลด์ของแต่ละกรอบ
+      db.collection(`littlemeow_slider_section_${sIdx}`).orderBy("order", "asc").onSnapshot(snap => {
+        const track = document.getElementById(`slider-track-${sIdx}`);
+        track.innerHTML = "";
+        if (snap.empty) {
+          track.innerHTML = `<p style="text-align:center; font-size:12px; color:var(--text-muted); padding:15px; width:100%;">ยังไม่มีผลงานในกลุ่มนี้</p>`;
+          return;
+        }
+        snap.forEach(doc => {
+          const d = doc.data();
+          const div = document.createElement("div");
+          div.className = "carousel-slide-item";
+          div.innerHTML = `
+            <div class="carousel-img-frame" onclick="openImgModal('${d.image}')">
+              <img src="${d.image}" alt="Slide">
+            </div>
+            <div class="carousel-desc-text">${d.desc || ''}</div>
+            <a href="${d.link || 'javascript:void(0)'}" ${d.link && d.link.startsWith('http') ? 'target="_blank"' : ''} class="btn-ex-label">
+              ${d.btnText || 'ex'}
+            </a>
+          `;
+          track.appendChild(div);
+        });
+      });
+    }
 
     function openImgModal(src) {
       if (!src) return;
