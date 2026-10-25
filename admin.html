@@ -152,8 +152,9 @@
       <button type="button" class="btn-add" onclick="addNewBox()">+ เพิ่มกรอบเล็กใหม่</button>
     </div>
 
+    <!-- ส่วนจัดการสไลเดอร์ มีช่องกรอกคำอธิบายใต้รูป -->
     <div class="card">
-      <div class="title">4. จัดการสไลเดอร์ผลงาน (สี่เหลี่ยมจัตุรัสตามภาพ 1:1)</div>
+      <div class="title">4. จัดการสไลเดอร์ผลงาน (ตามภาพร่างที่ 2)</div>
       <div id="sliderManager"></div>
       <button type="button" class="btn-add" onclick="addNewSliderItem()">+ เพิ่มภาพในสไลเดอร์</button>
     </div>
@@ -316,7 +317,7 @@
       sliderPostsData = [];
       sliderSnap.forEach(s => sliderPostsData.push({ id: s.id, ...s.data() }));
       if (!sliderPostsData.length) {
-        sliderPostsData = [{ image: "", btnText: "ex", link: "" }];
+        sliderPostsData = [{ image: "", desc: "", btnText: "ex", link: "" }];
       }
       renderSliderManager();
 
@@ -393,6 +394,7 @@
     showStatus("ใส่ไอคอนสำเร็จ");
   }
 
+  // จัดการสไลเดอร์ มีช่องกรอกคำอธิบายใต้รูป
   function renderSliderManager() {
     const box = document.getElementById("sliderManager");
     box.innerHTML = "";
@@ -401,13 +403,17 @@
       wrap.className = "item-card";
       wrap.innerHTML = `
         <div class="item-header">
-          <span style="font-weight:700; color:var(--color-pink-text);">ภาพสไลด์ที่ ${idx+1} (ทรงสี่เหลี่ยมจัตุรัส 1:1)</span>
+          <span style="font-weight:700; color:var(--color-pink-text);">ภาพสไลด์ที่ ${idx+1}</span>
           <button type="button" class="del-btn" onclick="removeSliderItem(${idx})">ลบภาพนี้ ✕</button>
         </div>
         <div class="field-group">
-          <label class="field-label">รูปภาพสไลด์ (ภาพชัด 100%)</label>
+          <label class="field-label">รูปภาพสไลด์</label>
           <label class="file-btn">เลือกรูปสไลด์จากเครื่อง <input type="file" accept="image/*" style="display:none;" onchange="uploadSliderImage(event, ${idx})"></label>
           <input type="text" class="input-box" id="slide-img-${idx}" value="${item.image || ''}" placeholder="หรือวางลิงก์รูป" oninput="sliderPostsData[${idx}].image = this.value">
+        </div>
+        <div class="field-group">
+          <label class="field-label">คำอธิบายใต้รูป (ตามภาพร่างที่ 2)</label>
+          <input type="text" class="input-box" value="${item.desc || ''}" placeholder="พิมพ์คำอธิบายใต้รูปภาพ..." oninput="sliderPostsData[${idx}].desc = this.value">
         </div>
         <div class="field-group">
           <label class="field-label">ข้อความบนปุ่ม</label>
@@ -421,7 +427,7 @@
       box.appendChild(wrap);
     });
   }
-  function addNewSliderItem() { sliderPostsData.push({ image: "", btnText: "ex", link: "" }); renderSliderManager(); }
+  function addNewSliderItem() { sliderPostsData.push({ image: "", desc: "", btnText: "ex", link: "" }); renderSliderManager(); }
   function removeSliderItem(idx) { sliderPostsData.splice(idx, 1); renderSliderManager(); }
   async function uploadSliderImage(event, idx) {
     const file = event.target.files[0];
@@ -492,6 +498,7 @@
           await db.collection(DB_SLIDER).add({
             order: i,
             image: sliderPostsData[i].image,
+            desc: sliderPostsData[i].desc || "",
             btnText: sliderPostsData[i].btnText || "ex",
             link: sliderPostsData[i].link || ""
           });
@@ -499,7 +506,7 @@
       }
 
       showStatus("บันทึกข้อมูลทั้งหมดสำเร็จแล้ว");
-      alert("✨ บันทึกข้อมูลสำเร็จเรียบร้อยแล้วค่ะ! ขนาดและสีขอบอัปเดตทันที ♡");
+      alert("✨ บันทึกข้อมูลสำเร็จเรียบร้อยแล้วค่ะ! ขนาดรูป คำอธิบาย และปุ่มอัปเดตทันที ♡");
       document.getElementById("newAdminPassword").value = "";
     } catch (err) {
       showStatus("บันทึกไม่สำเร็จ: " + err.message, true);
