@@ -14,42 +14,44 @@
 
   <style>
     :root {
-      /* โทนชมพูอ่อนละมุนตา */
-      --color-pink-soft: #fed5ea;
-      --color-pink-main: #fbaed8;
-      --color-pink-text: #e060a7;
+      /* โทนสีชมพูละมุน */
+      --color-pink-soft: #fde8f2;
+      --color-pink-main: #fbc6e3;
+      --color-pink-text: #db599f;
 
-      /* เขียวมะนาว & ครีมวานิลลา */
-      --color-green-soft: #daf3b8;
+      /* สีกรอบ: สีชมพูที่เข้มกว่าพื้นหลังนิดนึงตามบรีฟ */
+      --border-pink: #f09ac7;
+      
+      /* สีเขียวมะนาว & ครีมวานิลลา */
+      --color-green-soft: #e2f5c7;
       --color-green-main: #abeb6a;
       --color-green-dark: #4b8015;
-      --color-cream: #fdfaf3;
-      --color-cream-card: #ffffff;
+      --color-cream: #fdfaf5;
+      --card-white: #ffffff;
       
-      /* สีกรอบเข้มคมชัด */
-      --border-dark: #2a1f24;
-      --text-main: #2b2226;
-      --text-muted: #7d6b73;
-      --shadow-cute: 0 8px 24px rgba(42, 31, 36, 0.08);
+      --text-main: #45363c;
+      --text-muted: #826e76;
+      --shadow-cute: 0 8px 22px rgba(240, 154, 199, 0.2);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Quicksand', 'Mitr', sans-serif; -webkit-tap-highlight-color: transparent; }
     
     body {
-      background: radial-gradient(circle at top, #ffffff 0%, var(--color-cream) 55%, #fdf2f7 100%);
+      background: radial-gradient(circle at top, #ffffff 0%, var(--color-cream) 55%, #faecf4 100%);
       color: var(--text-main);
       min-height: 100vh;
       display: flex;
       justify-content: center;
-      padding: 20px 12px 60px;
+      padding: 20px 14px 60px;
     }
 
+    /* ขนาดกรอบรวมพอดี ไม่ใหญ่เกินไป */
     .main-wrap {
       width: 100%;
-      max-width: 440px;
+      max-width: 410px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 15px;
       position: relative;
     }
 
@@ -58,24 +60,24 @@
       top: 12px;
       right: 12px;
       z-index: 10;
-      width: 38px;
-      height: 38px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       background: #ffffff;
-      border: 2px solid var(--border-dark);
+      border: 2px solid var(--border-pink);
       color: var(--color-pink-text);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.06);
     }
 
     /* 1. ปก + โปรไฟล์คาบเกี่ยว + Detail */
     .header-group {
       position: relative;
-      background: var(--color-cream-card);
-      border: 2.5px solid var(--border-dark);
+      background: var(--card-white);
+      border: 2px solid var(--border-pink);
       border-radius: 26px;
       overflow: hidden;
       box-shadow: var(--shadow-cute);
@@ -83,10 +85,10 @@
 
     .banner-box {
       width: 100%;
-      height: 175px;
+      height: 165px;
       background: var(--color-pink-soft);
       overflow: hidden;
-      border-bottom: 2.5px solid var(--border-dark);
+      border-bottom: 2px solid var(--border-pink);
     }
     .banner-box img {
       width: 100%;
@@ -96,16 +98,16 @@
     }
 
     .profile-circle-wrap {
-      width: 104px;
-      height: 104px;
+      width: 98px;
+      height: 98px;
       border-radius: 50%;
-      border: 3px solid var(--border-dark);
+      border: 2.5px solid var(--border-pink);
       background: #fff;
       overflow: hidden;
-      margin: -52px auto 0;
+      margin: -49px auto 0;
       position: relative;
       z-index: 2;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+      box-shadow: 0 4px 14px rgba(240, 154, 199, 0.25);
     }
     .profile-circle-wrap img {
       width: 100%;
@@ -115,18 +117,18 @@
     }
 
     .detail-box {
-      padding: 12px 18px 22px;
+      padding: 12px 18px 20px;
       text-align: center;
       background: #ffffff;
     }
     .store-title {
-      font-size: 21px;
+      font-size: 20px;
       font-weight: 700;
       color: var(--color-pink-text);
       letter-spacing: 0.5px;
     }
     .store-bio {
-      font-size: 13.5px;
+      font-size: 13px;
       color: var(--text-muted);
       margin-top: 6px;
       line-height: 1.6;
@@ -140,8 +142,8 @@
       gap: 12px;
     }
     .duo-card-item {
-      background: var(--color-cream-card);
-      border: 2.5px solid var(--border-dark);
+      background: var(--card-white);
+      border: 2px solid var(--border-pink);
       border-radius: 20px;
       aspect-ratio: 1 / 1;
       overflow: hidden;
@@ -157,18 +159,18 @@
     }
     .duo-card-item:active img { transform: scale(0.96); }
 
-    /* 3. กรอบใหญ่บรรจุ 6 กรอบเล็ก */
+    /* 3. กรอบใหญ่บรรจุ 6 กรอบเล็ก ปรับขนาดให้พอดีตามบรีฟ */
     .big-container-box {
-      background: var(--color-cream-card);
-      border: 2.5px solid var(--border-dark);
+      background: var(--card-white);
+      border: 2px solid var(--border-pink);
       border-radius: 26px;
-      padding: 16px;
+      padding: 14px;
       box-shadow: var(--shadow-cute);
     }
     .inner-small-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
+      gap: 9px;
     }
     .mini-link-card {
       display: flex;
@@ -176,11 +178,11 @@
       gap: 8px;
       padding: 9px 10px;
       background: var(--color-cream);
-      border: 2px solid var(--border-dark);
+      border: 1.5px solid var(--border-pink);
       border-radius: 16px;
       text-decoration: none;
       color: var(--text-main);
-      box-shadow: 0 3px 8px rgba(0,0,0,0.03);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
       transition: transform 0.15s, background 0.15s;
     }
     .mini-link-card:active { transform: scale(0.97); }
@@ -188,17 +190,17 @@
       background: var(--color-pink-soft);
     }
     .mini-icon-box {
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
-      border: 1.5px solid var(--border-dark);
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      border: 1px solid var(--border-pink);
       background: #fff;
       overflow: hidden;
       flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 15px;
+      font-size: 14px;
     }
     .mini-icon-box img {
       width: 100%;
@@ -206,24 +208,24 @@
       object-fit: cover;
     }
     .mini-text-box {
-      font-size: 12.5px;
+      font-size: 12px;
       font-weight: 700;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    /* 4. สไลเดอร์เลื่อน ซ้าย-ขวา ปรับเป็นทรงสี่เหลี่ยมจัตุรัสตามภาพ */
+    /* 4. สไลเดอร์เลื่อน ซ้าย-ขวา */
     .slider-section-card {
-      background: var(--color-cream-card);
-      border: 2.5px solid var(--border-dark);
+      background: var(--card-white);
+      border: 2px solid var(--border-pink);
       border-radius: 26px;
-      padding: 16px;
+      padding: 14px;
       box-shadow: var(--shadow-cute);
       position: relative;
     }
     .slider-hint-label {
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 700;
       color: var(--color-green-dark);
       text-align: right;
@@ -235,32 +237,31 @@
     }
     .carousel-wrap {
       display: flex;
-      gap: 14px;
+      gap: 12px;
       overflow-x: auto;
       scroll-snap-type: x mandatory;
-      padding-bottom: 8px;
+      padding-bottom: 6px;
       scrollbar-width: none;
     }
     .carousel-wrap::-webkit-scrollbar { display: none; }
     
-    /* กรอบสี่เหลี่ยมจัตุรัส 1:1 ตามขนาดภาพป้าย */
     .carousel-slide-item {
-      flex: 0 0 250px;
+      flex: 0 0 230px;
       scroll-snap-align: center;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 10px;
+      gap: 9px;
     }
     .carousel-img-frame {
-      width: 250px;
-      height: 250px;
+      width: 230px;
+      height: 230px;
       aspect-ratio: 1 / 1;
-      border: 2.5px solid var(--border-dark);
-      border-radius: 22px;
+      border: 2px solid var(--border-pink);
+      border-radius: 20px;
       overflow: hidden;
       background: var(--color-cream);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.04);
       cursor: pointer;
     }
     .carousel-img-frame img {
@@ -271,15 +272,15 @@
     }
     .btn-ex-label {
       display: inline-block;
-      padding: 5px 24px;
-      border: 2px solid var(--border-dark);
+      padding: 4px 22px;
+      border: 1.5px solid var(--border-pink);
       border-radius: 14px;
       background: var(--color-green-main);
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 700;
       color: #1a3307;
       text-decoration: none;
-      box-shadow: 0 3px 8px rgba(171, 235, 106, 0.4);
+      box-shadow: 0 2px 6px rgba(171, 235, 106, 0.4);
     }
 
     /* Modal ขยายรูป */
@@ -287,8 +288,8 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.8);
-      backdrop-filter: blur(6px);
+      background: rgba(0,0,0,0.78);
+      backdrop-filter: blur(5px);
       z-index: 999999;
       align-items: center;
       justify-content: center;
@@ -298,7 +299,7 @@
     .modal-box {
       background: #fff;
       border-radius: 24px;
-      border: 2.5px solid var(--border-dark);
+      border: 2px solid var(--border-pink);
       max-width: 380px;
       width: 100%;
       overflow: hidden;
@@ -318,7 +319,7 @@
       width: 32px;
       height: 32px;
       border-radius: 50%;
-      background: rgba(0,0,0,0.55);
+      background: rgba(0,0,0,0.5);
       color: #fff;
       display: flex;
       align-items: center;
@@ -355,7 +356,7 @@
     <!-- 2. ส่วนกลางบน: รูปคู่ 2 ช่อง ซ้าย-ขวา -->
     <div class="duo-cards-grid" id="duoCardsContainer"></div>
 
-    <!-- 3. ส่วนกลางล่าง: กรอบใหญ่ มีกรอบเล็กย่อยด้านใน (6 ช่องขึ้นไป) -->
+    <!-- 3. ส่วนกลางล่าง: กรอบใหญ่บรรจุ 6 กรอบเล็ก (ลดขนาดพอดีกับรูปคู่) -->
     <div class="big-container-box">
       <div class="inner-small-grid" id="smallBoxesContainer"></div>
     </div>
