@@ -19,7 +19,7 @@
       --color-pink-main: #fbc6e3;
       --color-pink-text: #db599f;
 
-      /* สีกรอบ: สีชมพูที่เข้มกว่าพื้นหลังนิดนึงตามบรีฟ */
+      /* สีกรอบ: สีชมพูที่เข้มกว่าพื้นหลังนิดนึง */
       --border-pink: #f09ac7;
       
       /* สีเขียวมะนาว & ครีมวานิลลา */
@@ -45,7 +45,6 @@
       padding: 20px 14px 60px;
     }
 
-    /* ขนาดกรอบรวมพอดี ไม่ใหญ่เกินไป */
     .main-wrap {
       width: 100%;
       max-width: 410px;
@@ -159,7 +158,7 @@
     }
     .duo-card-item:active img { transform: scale(0.96); }
 
-    /* 3. กรอบใหญ่บรรจุ 6 กรอบเล็ก ปรับขนาดให้พอดีตามบรีฟ */
+    /* 3. กรอบใหญ่บรรจุ 6 กรอบเล็ก */
     .big-container-box {
       background: var(--card-white);
       border: 2px solid var(--border-pink);
@@ -215,50 +214,40 @@
       text-overflow: ellipsis;
     }
 
-    /* 4. สไลเดอร์เลื่อน ซ้าย-ขวา */
+    /* 4. สไลเดอร์เลื่อน ซ้าย-ขวา ตามภาพสอง */
     .slider-section-card {
       background: var(--card-white);
       border: 2px solid var(--border-pink);
       border-radius: 26px;
-      padding: 14px;
+      padding: 16px 14px 18px;
       box-shadow: var(--shadow-cute);
       position: relative;
     }
-    .slider-hint-label {
-      font-size: 11.5px;
-      font-weight: 700;
-      color: var(--color-green-dark);
-      text-align: right;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 4px;
-    }
     .carousel-wrap {
       display: flex;
-      gap: 12px;
+      gap: 14px;
       overflow-x: auto;
       scroll-snap-type: x mandatory;
-      padding-bottom: 6px;
+      padding: 4px 2px 6px;
       scrollbar-width: none;
     }
     .carousel-wrap::-webkit-scrollbar { display: none; }
     
+    /* ปรับขนาดการ์ดในสไลด์ให้กะทัดรัดลง */
     .carousel-slide-item {
-      flex: 0 0 230px;
+      flex: 0 0 185px;
       scroll-snap-align: center;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 9px;
+      gap: 6px;
     }
     .carousel-img-frame {
-      width: 230px;
-      height: 230px;
+      width: 185px;
+      height: 185px;
       aspect-ratio: 1 / 1;
       border: 2px solid var(--border-pink);
-      border-radius: 20px;
+      border-radius: 18px;
       overflow: hidden;
       background: var(--color-cream);
       box-shadow: 0 3px 10px rgba(0,0,0,0.04);
@@ -269,27 +258,43 @@
       height: 100%;
       object-fit: cover;
       display: block;
+      transition: transform 0.2s;
     }
+    .carousel-img-frame:active img { transform: scale(0.96); }
+
+    /* ข้อความคำอธิบายใต้รูป */
+    .carousel-desc-text {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      text-align: center;
+      line-height: 1.45;
+      white-space: pre-line;
+      max-width: 180px;
+      min-height: 16px;
+    }
+
+    /* ปุ่ม ex */
     .btn-ex-label {
       display: inline-block;
       padding: 4px 22px;
       border: 1.5px solid var(--border-pink);
       border-radius: 14px;
       background: var(--color-green-main);
-      font-size: 11.5px;
+      font-size: 11px;
       font-weight: 700;
       color: #1a3307;
       text-decoration: none;
       box-shadow: 0 2px 6px rgba(171, 235, 106, 0.4);
+      margin-top: 2px;
     }
 
-    /* Modal ขยายรูป */
+    /* Modal ขยายรูปขนาดปกติ */
     .modal-overlay {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.78);
-      backdrop-filter: blur(5px);
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(6px);
       z-index: 999999;
       align-items: center;
       justify-content: center;
@@ -307,7 +312,7 @@
     }
     .modal-box img {
       width: 100%;
-      max-height: 420px;
+      max-height: 440px;
       object-fit: contain;
       background: #000;
       display: block;
@@ -356,14 +361,13 @@
     <!-- 2. ส่วนกลางบน: รูปคู่ 2 ช่อง ซ้าย-ขวา -->
     <div class="duo-cards-grid" id="duoCardsContainer"></div>
 
-    <!-- 3. ส่วนกลางล่าง: กรอบใหญ่บรรจุ 6 กรอบเล็ก (ลดขนาดพอดีกับรูปคู่) -->
+    <!-- 3. ส่วนกลางล่าง: กรอบใหญ่บรรจุ 6 กรอบเล็ก -->
     <div class="big-container-box">
       <div class="inner-small-grid" id="smallBoxesContainer"></div>
     </div>
 
-    <!-- 4. ส่วนล่างสุด: สไลเดอร์เลื่อน ซ้าย-ขวา สี่เหลี่ยมจัตุรัสตามภาพ -->
+    <!-- 4. ส่วนล่างสุด: สไลเดอร์เลื่อน ซ้าย-ขวา ตามภาพร่างที่ 2 -->
     <div class="slider-section-card">
-      <div class="slider-hint-label">เลื่อน ⟵ ⟶</div>
       <div class="carousel-wrap" id="sliderContainer"></div>
     </div>
 
@@ -476,6 +480,7 @@
       });
     });
 
+    // แสดงสไลเดอร์: รูป ➔ คำอธิบาย ➔ ปุ่ม ex
     db.collection(DB_SLIDER).orderBy("order", "asc").onSnapshot(snap => {
       const container = document.getElementById("sliderContainer");
       container.innerHTML = "";
@@ -491,6 +496,7 @@
           <div class="carousel-img-frame" onclick="openImgModal('${d.image}')">
             <img src="${d.image}" alt="Slide">
           </div>
+          <div class="carousel-desc-text">${d.desc || ''}</div>
           <a href="${d.link || 'javascript:void(0)'}" ${d.link && d.link.startsWith('http') ? 'target="_blank"' : ''} class="btn-ex-label">
             ${d.btnText || 'ex'}
           </a>
