@@ -152,9 +152,13 @@
       <button type="button" class="btn-add" onclick="addNewBox()">+ เพิ่มกรอบเล็กใหม่</button>
     </div>
 
-    <!-- ส่วนจัดการสไลเดอร์ มีช่องกรอกคำอธิบายใต้รูป -->
+    <!-- ส่วนจัดการสไลเดอร์ มีช่องกรอกหัวข้อสไลเดอร์ -->
     <div class="card">
-      <div class="title">4. จัดการสไลเดอร์ผลงาน (ตามภาพร่างที่ 2)</div>
+      <div class="title">4. จัดการสไลเดอร์ผลงาน</div>
+      <div class="field-group">
+        <label class="field-label">หัวข้อสไลเดอร์</label>
+        <input type="text" id="sliderHeadingInput" class="input-box" placeholder="รวมกลุ่มของตกแต่ง">
+      </div>
       <div id="sliderManager"></div>
       <button type="button" class="btn-add" onclick="addNewSliderItem()">+ เพิ่มภาพในสไลเดอร์</button>
     </div>
@@ -294,6 +298,7 @@
       document.getElementById("storeBio").value = d.bio || "";
       document.getElementById("bannerImg").value = d.bannerImg || "https://file.garden/asG8Gt-rqWIpi3II/line_oa_chat_261025_142526.jpeg";
       document.getElementById("profileImg").value = d.profileImg || "https://file.garden/asG8Gt-rqWIpi3II/line_oa_chat_261025_142322.jpeg";
+      document.getElementById("sliderHeadingInput").value = d.sliderHeading || "รวมกลุ่มของตกแต่ง";
       document.getElementById("musicUrl").value = d.musicUrl || "https://file.garden/asG8Gt-rqWIpi3II/Ariana%20Grande%20-%20God%20is%20a%20woman%20(Official%20Video).mp3";
       document.getElementById("adminEmailInput").value = currentAdminEmail;
 
@@ -394,7 +399,7 @@
     showStatus("ใส่ไอคอนสำเร็จ");
   }
 
-  // จัดการสไลเดอร์ มีช่องกรอกคำอธิบายใต้รูป
+  // จัดการสไลเดอร์ มีช่องกรอกหัวข้อสไลเดอร์ และคำอธิบายใต้รูป
   function renderSliderManager() {
     const box = document.getElementById("sliderManager");
     box.innerHTML = "";
@@ -412,7 +417,7 @@
           <input type="text" class="input-box" id="slide-img-${idx}" value="${item.image || ''}" placeholder="หรือวางลิงก์รูป" oninput="sliderPostsData[${idx}].image = this.value">
         </div>
         <div class="field-group">
-          <label class="field-label">คำอธิบายใต้รูป (ตามภาพร่างที่ 2)</label>
+          <label class="field-label">คำอธิบายใต้รูป</label>
           <input type="text" class="input-box" value="${item.desc || ''}" placeholder="พิมพ์คำอธิบายใต้รูปภาพ..." oninput="sliderPostsData[${idx}].desc = this.value">
         </div>
         <div class="field-group">
@@ -452,6 +457,7 @@
       bio: document.getElementById("storeBio").value.trim(),
       bannerImg: document.getElementById("bannerImg").value.trim(),
       profileImg: document.getElementById("profileImg").value.trim(),
+      sliderHeading: document.getElementById("sliderHeadingInput").value.trim() || "รวมกลุ่มของตกแต่ง",
       musicUrl: document.getElementById("musicUrl").value.trim(),
       adminEmail: currentAdminEmail,
       updatedAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -506,7 +512,7 @@
       }
 
       showStatus("บันทึกข้อมูลทั้งหมดสำเร็จแล้ว");
-      alert("✨ บันทึกข้อมูลสำเร็จเรียบร้อยแล้วค่ะ! ขนาดรูป คำอธิบาย และปุ่มอัปเดตทันที ♡");
+      alert("✨ บันทึกข้อมูลสำเร็จเรียบร้อยแล้วค่ะ! หัวข้อสไลเดอร์และข้อมูลอัปเดตทันที ♡");
       document.getElementById("newAdminPassword").value = "";
     } catch (err) {
       showStatus("บันทึกไม่สำเร็จ: " + err.message, true);
