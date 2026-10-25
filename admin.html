@@ -12,23 +12,23 @@
 
   <style>
     :root {
-      --color-pink-soft: #fed5ea;
-      --color-pink-main: #fbaed8;
-      --color-pink-text: #e060a7;
+      --color-pink-soft: #fde8f2;
+      --color-pink-main: #fbc6e3;
+      --color-pink-text: #db599f;
+      --border-pink: #f09ac7;
       
       --color-green-main: #abeb6a;
       --color-green-dark: #4b8015;
-      --color-cream: #fdfaf3;
+      --color-cream: #fdfaf5;
       
-      --border-dark: #2a1f24;
-      --text-main: #2b2226;
-      --text-muted: #7d6b73;
+      --text-main: #45363c;
+      --text-muted: #826e76;
       --danger: #ef4444;
-      --shadow-cute: 0 8px 24px rgba(42, 31, 36, 0.08);
+      --shadow-cute: 0 8px 22px rgba(240, 154, 199, 0.2);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Quicksand', 'Mitr', sans-serif; }
     body {
-      background: radial-gradient(circle at top, #ffffff 0%, var(--color-cream) 55%, #fdf2f7 100%);
+      background: radial-gradient(circle at top, #ffffff 0%, var(--color-cream) 55%, #faecf4 100%);
       color: var(--text-main);
       min-height: 100vh;
       padding: 20px 14px 80px;
@@ -42,7 +42,7 @@
       border-radius: 24px;
       padding: 20px 18px;
       box-shadow: var(--shadow-cute);
-      border: 2.5px solid var(--border-dark);
+      border: 2px solid var(--border-pink);
       margin-bottom: 16px;
     }
     .title { font-size: 17px; font-weight: 700; color: var(--color-pink-text); text-align: center; margin-bottom: 16px; }
@@ -50,7 +50,7 @@
     .field-label { font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 6px; display: block; }
     
     .input-box, .textarea-box {
-      width: 100%; padding: 11px 14px; border-radius: 14px; border: 2px solid var(--border-dark);
+      width: 100%; padding: 11px 14px; border-radius: 14px; border: 1.5px solid var(--border-pink);
       outline: none; font-size: 13.5px; background: #fffdfa; color: var(--text-main);
     }
     .input-box:focus, .textarea-box:focus { border-color: var(--color-pink-text); }
@@ -58,40 +58,40 @@
 
     .file-btn {
       display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-      padding: 9px 14px; background: var(--color-pink-soft); border: 2px dashed var(--color-pink-text);
+      padding: 9px 14px; background: var(--color-pink-soft); border: 1.5px dashed var(--color-pink-text);
       border-radius: 14px; color: var(--color-pink-text); font-size: 12.5px; font-weight: 700;
       cursor: pointer; width: 100%; margin-bottom: 6px;
     }
 
     .btn {
-      width: 100%; padding: 13px; border-radius: 18px; border: 2px solid var(--border-dark);
+      width: 100%; padding: 13px; border-radius: 18px; border: none;
       font-size: 14.5px; font-weight: 700; cursor: pointer;
       background: linear-gradient(135deg, var(--color-pink-main), var(--color-pink-text));
-      color: #fff; margin-top: 6px; box-shadow: 0 4px 14px rgba(224, 96, 167, 0.3);
+      color: #fff; margin-top: 6px; box-shadow: 0 4px 14px rgba(224, 96, 167, 0.25);
     }
     .btn:disabled { opacity: 0.6; cursor: not-allowed; }
-    .btn-secondary { background: #fff; color: var(--border-dark); border: 2px solid var(--border-dark); margin-top: 10px; box-shadow: none; }
+    .btn-secondary { background: #fff; color: var(--color-pink-text); border: 1.5px solid var(--border-pink); margin-top: 10px; box-shadow: none; }
     
     .btn-add {
-      background: #f4faeb; color: #355f10; border: 2px dashed var(--color-green-dark);
+      background: #f4faeb; color: #355f10; border: 1.5px dashed var(--color-green-dark);
       font-size: 13px; padding: 10px; border-radius: 14px; margin-top: 8px; width: 100%; cursor: pointer; font-weight: 700;
     }
 
     .item-card {
-      background: var(--color-cream); border: 2px solid var(--border-dark); border-radius: 18px;
+      background: var(--color-cream); border: 1.5px solid var(--border-pink); border-radius: 18px;
       padding: 14px; margin-bottom: 12px; position: relative;
     }
     .item-header {
       display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;
     }
     .del-btn {
-      background: #fee2e2; color: var(--danger); border: 1.5px solid var(--danger);
+      background: #fee2e2; color: var(--danger); border: 1px solid var(--danger);
       padding: 4px 10px; border-radius: 10px; font-size: 11.5px; font-weight: 700; cursor: pointer;
     }
 
     .status-msg {
       position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-      background: var(--border-dark); color: #fff; padding: 10px 20px; border-radius: 20px;
+      background: var(--text-main); color: #fff; padding: 10px 20px; border-radius: 20px;
       font-size: 13px; z-index: 999999; display: none; box-shadow: 0 4px 14px rgba(0,0,0,0.25);
     }
     .hidden { display: none !important; }
@@ -128,7 +128,7 @@
       </div>
 
       <div class="field-group">
-        <label class="field-label">รูปภาพปก / แบนเนอร์ (รองรับทั้งไฟล์ภาพ และ URL ภาพนิ่ง/GIF)</label>
+        <label class="field-label">รูปภาพปก / แบนเนอร์</label>
         <label class="file-btn">เลือกรูปแบนเนอร์จากเครื่อง <input type="file" accept="image/*" style="display:none;" onchange="uploadDirect(event, 'bannerImg')"></label>
         <input type="text" id="bannerImg" class="input-box" placeholder="หรือวางลิงก์รูปแบนเนอร์">
       </div>
@@ -221,7 +221,7 @@
   function showStatus(text, isError = false) {
     const el = document.getElementById("statusMsg");
     el.textContent = text;
-    el.style.background = isError ? "#ef4444" : "#2a1f24";
+    el.style.background = isError ? "#ef4444" : "#f09ac7";
     el.style.display = "block";
     setTimeout(() => { el.style.display = "none"; }, 3000);
   }
@@ -499,7 +499,7 @@
       }
 
       showStatus("บันทึกข้อมูลทั้งหมดสำเร็จแล้ว");
-      alert("✨ บันทึกข้อมูลสำเร็จเรียบร้อยแล้วค่ะ! กรอบสี่เหลี่ยมจัตุรัสแสดงผลทันที ♡");
+      alert("✨ บันทึกข้อมูลสำเร็จเรียบร้อยแล้วค่ะ! ขนาดและสีขอบอัปเดตทันที ♡");
       document.getElementById("newAdminPassword").value = "";
     } catch (err) {
       showStatus("บันทึกไม่สำเร็จ: " + err.message, true);
