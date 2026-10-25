@@ -14,25 +14,29 @@
 
   <style>
     :root {
-      /* โทนสีตามภาพ: ชมพูสดใส + เขียวมะนาว + ครีมวานิลลา */
-      --color-pink: #f79cd2;
-      --color-pink-dark: #ea66b5;
-      --color-green: #9de659;
-      --color-green-dark: #7acb32;
-      --color-cream: #fcf7ed;
-      --color-cream-soft: #fbf3e4;
+      /* โทนชมพูอ่อนละมุนตา */
+      --color-pink-soft: #fed5ea;
+      --color-pink-main: #fbaed8;
+      --color-pink-text: #e060a7;
+
+      /* เขียวมะนาว & ครีมวานิลลา */
+      --color-green-soft: #daf3b8;
+      --color-green-main: #abeb6a;
+      --color-green-dark: #4b8015;
+      --color-cream: #fdfaf3;
+      --color-cream-card: #ffffff;
       
-      --card-white: #ffffff;
-      --border-dark: #2c2527;
-      --text-main: #34282c;
-      --text-muted: #756269;
-      --shadow-cute: 0 8px 24px rgba(247, 156, 210, 0.22);
+      /* สีกรอบเข้มคมชัด */
+      --border-dark: #2a1f24;
+      --text-main: #2b2226;
+      --text-muted: #7d6b73;
+      --shadow-cute: 0 8px 24px rgba(42, 31, 36, 0.08);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Quicksand', 'Mitr', sans-serif; -webkit-tap-highlight-color: transparent; }
     
     body {
-      background: radial-gradient(circle at top, #fffdfa 0%, var(--color-cream) 55%, #faecf4 100%);
+      background: radial-gradient(circle at top, #ffffff 0%, var(--color-cream) 55%, #fdf2f7 100%);
       color: var(--text-main);
       min-height: 100vh;
       display: flex;
@@ -59,18 +63,18 @@
       border-radius: 50%;
       background: #ffffff;
       border: 2px solid var(--border-dark);
-      color: var(--color-pink-dark);
+      color: var(--color-pink-text);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
     }
 
     /* 1. ปก + โปรไฟล์คาบเกี่ยว + Detail */
     .header-group {
       position: relative;
-      background: var(--card-white);
+      background: var(--color-cream-card);
       border: 2.5px solid var(--border-dark);
       border-radius: 26px;
       overflow: hidden;
@@ -80,9 +84,9 @@
     .banner-box {
       width: 100%;
       height: 175px;
-      background: var(--color-cream-soft);
+      background: var(--color-pink-soft);
       overflow: hidden;
-      border-bottom: 2px solid var(--border-dark);
+      border-bottom: 2.5px solid var(--border-dark);
     }
     .banner-box img {
       width: 100%;
@@ -118,7 +122,7 @@
     .store-title {
       font-size: 21px;
       font-weight: 700;
-      color: var(--color-pink-dark);
+      color: var(--color-pink-text);
       letter-spacing: 0.5px;
     }
     .store-bio {
@@ -136,7 +140,7 @@
       gap: 12px;
     }
     .duo-card-item {
-      background: var(--card-white);
+      background: var(--color-cream-card);
       border: 2.5px solid var(--border-dark);
       border-radius: 20px;
       aspect-ratio: 1 / 1;
@@ -155,7 +159,7 @@
 
     /* 3. กรอบใหญ่บรรจุ 6 กรอบเล็ก */
     .big-container-box {
-      background: var(--card-white);
+      background: var(--color-cream-card);
       border: 2.5px solid var(--border-dark);
       border-radius: 26px;
       padding: 16px;
@@ -176,12 +180,12 @@
       border-radius: 16px;
       text-decoration: none;
       color: var(--text-main);
-      box-shadow: 0 3px 8px rgba(0,0,0,0.04);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.03);
       transition: transform 0.15s, background 0.15s;
     }
     .mini-link-card:active { transform: scale(0.97); }
     .mini-link-card:nth-child(even) {
-      background: #fdf2f8; /* สลับโทนชมพูอ่อนน่ารัก */
+      background: var(--color-pink-soft);
     }
     .mini-icon-box {
       width: 34px;
@@ -209,9 +213,9 @@
       text-overflow: ellipsis;
     }
 
-    /* 4. สไลเดอร์เลื่อน ซ้าย-ขวา */
+    /* 4. สไลเดอร์เลื่อน ซ้าย-ขวา ปรับเป็นทรงสี่เหลี่ยมจัตุรัสตามภาพ */
     .slider-section-card {
-      background: var(--card-white);
+      background: var(--color-cream-card);
       border: 2.5px solid var(--border-dark);
       border-radius: 26px;
       padding: 16px;
@@ -231,29 +235,33 @@
     }
     .carousel-wrap {
       display: flex;
-      gap: 12px;
+      gap: 14px;
       overflow-x: auto;
       scroll-snap-type: x mandatory;
       padding-bottom: 8px;
       scrollbar-width: none;
     }
     .carousel-wrap::-webkit-scrollbar { display: none; }
+    
+    /* กรอบสี่เหลี่ยมจัตุรัส 1:1 ตามขนาดภาพป้าย */
     .carousel-slide-item {
-      flex: 0 0 240px;
+      flex: 0 0 250px;
       scroll-snap-align: center;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 9px;
+      gap: 10px;
     }
     .carousel-img-frame {
-      width: 100%;
-      height: 180px;
-      border: 2px solid var(--border-dark);
-      border-radius: 20px;
+      width: 250px;
+      height: 250px;
+      aspect-ratio: 1 / 1;
+      border: 2.5px solid var(--border-dark);
+      border-radius: 22px;
       overflow: hidden;
       background: var(--color-cream);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      cursor: pointer;
     }
     .carousel-img-frame img {
       width: 100%;
@@ -263,15 +271,15 @@
     }
     .btn-ex-label {
       display: inline-block;
-      padding: 5px 22px;
+      padding: 5px 24px;
       border: 2px solid var(--border-dark);
       border-radius: 14px;
-      background: var(--color-green);
+      background: var(--color-green-main);
       font-size: 12px;
       font-weight: 700;
       color: #1a3307;
       text-decoration: none;
-      box-shadow: 0 3px 8px rgba(157, 230, 89, 0.4);
+      box-shadow: 0 3px 8px rgba(171, 235, 106, 0.4);
     }
 
     /* Modal ขยายรูป */
@@ -323,7 +331,6 @@
 </head>
 <body>
 
-  <!-- เพลง Ariana Grande - God is a woman -->
   <audio id="bgMusic" loop autoplay preload="auto" playsinline src="https://file.garden/asG8Gt-rqWIpi3II/Ariana%20Grande%20-%20God%20is%20a%20woman%20(Official%20Video).mp3"></audio>
 
   <div class="main-wrap">
@@ -353,7 +360,7 @@
       <div class="inner-small-grid" id="smallBoxesContainer"></div>
     </div>
 
-    <!-- 4. ส่วนล่างสุด: สไลเดอร์เลื่อน ซ้าย-ขวา -->
+    <!-- 4. ส่วนล่างสุด: สไลเดอร์เลื่อน ซ้าย-ขวา สี่เหลี่ยมจัตุรัสตามภาพ -->
     <div class="slider-section-card">
       <div class="slider-hint-label">เลื่อน ⟵ ⟶</div>
       <div class="carousel-wrap" id="sliderContainer"></div>
@@ -410,7 +417,6 @@
       }, { passive: true });
     });
 
-    // 1. ดึงข้อมูลส่วนหัว
     db.collection(DB_CONFIG).doc("main").onSnapshot(doc => {
       if (doc.exists) {
         const d = doc.data();
@@ -428,7 +434,6 @@
       }
     });
 
-    // 2. ดึงรูปคู่ 2 ช่อง ซ้าย-ขวา
     db.collection(DB_DUO).orderBy("order", "asc").onSnapshot(snap => {
       const container = document.getElementById("duoCardsContainer");
       container.innerHTML = "";
@@ -447,7 +452,6 @@
       });
     });
 
-    // 3. ดึงกรอบเล็กในกรอบใหญ่ (6 กรอบขึ้นไป)
     db.collection(DB_BOXES).orderBy("order", "asc").onSnapshot(snap => {
       const container = document.getElementById("smallBoxesContainer");
       container.innerHTML = "";
@@ -471,7 +475,6 @@
       });
     });
 
-    // 4. ดึงสไลเดอร์เลื่อน ซ้าย-ขวา
     db.collection(DB_SLIDER).orderBy("order", "asc").onSnapshot(snap => {
       const container = document.getElementById("sliderContainer");
       container.innerHTML = "";
