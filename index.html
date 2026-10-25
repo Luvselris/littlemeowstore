@@ -214,7 +214,7 @@
       text-overflow: ellipsis;
     }
 
-    /* 4. สไลเดอร์เลื่อน ซ้าย-ขวา ตามภาพสอง */
+    /* 4. สไลเดอร์เลื่อน ซ้าย-ขวา */
     .slider-section-card {
       background: var(--card-white);
       border: 2px solid var(--border-pink);
@@ -223,6 +223,17 @@
       box-shadow: var(--shadow-cute);
       position: relative;
     }
+    
+    /* หัวข้อ "รวมกลุ่มของตกแต่ง" โทนสีเดียวกับเว็บ */
+    .slider-title-header {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--color-pink-text);
+      text-align: center;
+      margin-bottom: 12px;
+      letter-spacing: 0.3px;
+    }
+
     .carousel-wrap {
       display: flex;
       gap: 14px;
@@ -233,7 +244,6 @@
     }
     .carousel-wrap::-webkit-scrollbar { display: none; }
     
-    /* ปรับขนาดการ์ดในสไลด์ให้กะทัดรัดลง */
     .carousel-slide-item {
       flex: 0 0 185px;
       scroll-snap-align: center;
@@ -288,7 +298,7 @@
       margin-top: 2px;
     }
 
-    /* Modal ขยายรูปขนาดปกติ */
+    /* Modal ขยายรูป */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -366,8 +376,9 @@
       <div class="inner-small-grid" id="smallBoxesContainer"></div>
     </div>
 
-    <!-- 4. ส่วนล่างสุด: สไลเดอร์เลื่อน ซ้าย-ขวา ตามภาพร่างที่ 2 -->
+    <!-- 4. ส่วนล่างสุด: สไลเดอร์เลื่อน ซ้าย-ขวา มีหัวข้อ "รวมกลุ่มของตกแต่ง" -->
     <div class="slider-section-card">
+      <div class="slider-title-header" id="sliderHeadingText">รวมกลุ่มของตกแต่ง</div>
       <div class="carousel-wrap" id="sliderContainer"></div>
     </div>
 
@@ -432,6 +443,7 @@
         if (d.bio !== undefined) document.getElementById("mainStoreBio").textContent = d.bio;
         if (d.bannerImg) document.getElementById("mainBanner").src = d.bannerImg;
         if (d.profileImg) document.getElementById("mainProfile").src = d.profileImg;
+        if (d.sliderHeading) document.getElementById("sliderHeadingText").textContent = d.sliderHeading;
         if (d.musicUrl && !music.src.endsWith(d.musicUrl)) {
           music.src = d.musicUrl;
           startMusic();
