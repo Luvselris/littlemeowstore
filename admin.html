@@ -45,7 +45,7 @@
       border: 2px solid var(--border-pink);
       margin-bottom: 16px;
     }
-    .title { font-size: 17px; font-weight: 700; color: var(--color-pink-text); text-align: center; margin-bottom: 16px; }
+    .title { font-size: 16.5px; font-weight: 700; color: var(--color-pink-text); text-align: center; margin-bottom: 16px; }
     .field-group { margin-bottom: 14px; }
     .field-label { font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 6px; display: block; }
     
@@ -116,6 +116,7 @@
 
   <div id="dashboardBox" class="hidden">
     
+    <!-- 1. ส่วนหัวร้านค้า -->
     <div class="card">
       <div class="title">1. ข้อมูลส่วนหัว & รายละเอียด</div>
       <div class="field-group">
@@ -140,29 +141,24 @@
       </div>
     </div>
 
+    <!-- 2. รูปคู่ 2 ช่อง -->
     <div class="card">
       <div class="title">2. จัดการรูปคู่ 2 ช่อง (เพิ่ม/ลบได้ไม่จำกัด)</div>
       <div id="duoManager"></div>
       <button type="button" class="btn-add" onclick="addNewDuoCard()">+ เพิ่มรูปใหม่</button>
     </div>
 
+    <!-- 3. 6 กรอบเล็ก -->
     <div class="card">
       <div class="title">3. จัดการกรอบเล็กในกรอบใหญ่ (6 กรอบ)</div>
       <div id="boxesManager"></div>
       <button type="button" class="btn-add" onclick="addNewBox()">+ เพิ่มกรอบเล็กใหม่</button>
     </div>
 
-    <!-- ส่วนจัดการสไลเดอร์ มีช่องกรอกหัวข้อสไลเดอร์ -->
-    <div class="card">
-      <div class="title">4. จัดการสไลเดอร์ผลงาน</div>
-      <div class="field-group">
-        <label class="field-label">หัวข้อสไลเดอร์</label>
-        <input type="text" id="sliderHeadingInput" class="input-box" placeholder="รวมกลุ่มของตกแต่ง">
-      </div>
-      <div id="sliderManager"></div>
-      <button type="button" class="btn-add" onclick="addNewSliderItem()">+ เพิ่มภาพในสไลเดอร์</button>
-    </div>
+    <!-- 4. ส่วนจัดการ 5 กรอบใหญ่สไลเดอร์ผลงาน -->
+    <div id="adminAllSlidersContainer"></div>
 
+    <!-- 5. เพลงประกอบร้าน -->
     <div class="card">
       <div class="title">5. เพลงประกอบร้าน (.mp3)</div>
       <div class="field-group">
@@ -171,6 +167,7 @@
       </div>
     </div>
 
+    <!-- 6. บัญชีแอดมิน -->
     <div class="card">
       <div class="title">6. บัญชีและความปลอดภัยแอดมิน</div>
       <div class="field-group">
@@ -206,14 +203,17 @@
   const DB_CONFIG = "littlemeow_site_config";
   const DB_DUO = "littlemeow_banner_cards";
   const DB_BOXES = "littlemeow_contact_boxes";
-  const DB_SLIDER = "littlemeow_slider_posts";
 
   let currentAdminEmail = "Fuwariyumeneko@gmail.com";
   let currentAdminPass = "pattrapa1234";
 
   let duoCardsData = [];
   let smallBoxesData = [];
-  let sliderPostsData = [];
+  
+  // จัดการข้อมูลสไลเดอร์ 5 กรอบใหญ่
+  const TOTAL_SECTIONS = 5;
+  let sliderHeadings = Array(TOTAL_SECTIONS).fill("");
+  let sliderSectionsData = Array(TOTAL_SECTIONS).fill().map(() => []);
 
   db.collection(DB_CONFIG).doc("main").get().then(doc => {
     if (doc.exists) {
@@ -298,10 +298,10 @@
       document.getElementById("storeBio").value = d.bio || "";
       document.getElementById("bannerImg").value = d.bannerImg || "https://file.garden/asG8Gt-rqWIpi3II/line_oa_chat_261025_142526.jpeg";
       document.getElementById("profileImg").value = d.profileImg || "https://file.garden/asG8Gt-rqWIpi3II/line_oa_chat_261025_142322.jpeg";
-      document.getElementById("sliderHeadingInput").value = d.sliderHeading || "รวมกลุ่มของตกแต่ง";
       document.getElementById("musicUrl").value = d.musicUrl || "https://file.garden/asG8Gt-rqWIpi3II/Ariana%20Grande%20-%20God%20is%20a%20woman%20(Official%20Video).mp3";
       document.getElementById("adminEmailInput").value = currentAdminEmail;
 
+      // 2. ดึงรูปคู่
       const duoSnap = await db.collection(DB_DUO).orderBy("order", "asc").get();
       duoCardsData = [];
       duoSnap.forEach(s => duoCardsData.push({ id: s.id, ...s.data() }));
@@ -310,6 +310,7 @@
       }
       renderDuoManager();
 
+      // 3. ดึง 6 กรอบเล็ก
       const boxSnap = await db.collection(DB_BOXES).orderBy("order", "asc").get();
       smallBoxesData = [];
       boxSnap.forEach(s => smallBoxesData.push({ id: s.id, ...s.data() }));
@@ -318,13 +319,25 @@
       }
       renderBoxesManager();
 
-      const sliderSnap = await db.collection(DB_SLIDER).orderBy("order", "asc").get();
-      sliderPostsData = [];
-      sliderSnap.forEach(s => sliderPostsData.push({ id: s.id, ...s.data() }));
-      if (!sliderPostsData.length) {
-        sliderPostsData = [{ image: "", desc: "", btnText: "ex", link: "" }];
+      // 4. ดึงข้อมูลสไลเดอร์ทั้ง 5 กรอบใหญ่
+      for (let sIdx = 0; sIdx < TOTAL_SECTIONS; sIdx++) {
+        // ดึงหัวข้อ
+        const metaDoc = await db.collection(DB_CONFIG).doc(`slider_meta_${sIdx}`).get();
+        if (metaDoc.exists && metaDoc.data().heading) {
+          sliderHeadings[sIdx] = metaDoc.data().heading;
+        } else {
+          sliderHeadings[sIdx] = sIdx === 0 ? "รวมกลุ่มของตกแต่ง" : `รวมกลุ่มของตกแต่ง ${sIdx + 1}`;
+        }
+
+        // ดึงภาพสไลด์
+        const sSnap = await db.collection(`littlemeow_slider_section_${sIdx}`).orderBy("order", "asc").get();
+        sliderSectionsData[sIdx] = [];
+        sSnap.forEach(s => sliderSectionsData[sIdx].push({ id: s.id, ...s.data() }));
+        if (!sliderSectionsData[sIdx].length && sIdx === 0) {
+          sliderSectionsData[sIdx] = [{ image: "", desc: "", btnText: "ex", link: "" }];
+        }
       }
-      renderSliderManager();
+      renderAllSlidersAdmin();
 
       showStatus("โหลดข้อมูลสำเร็จ");
     } catch (err) {
@@ -399,47 +412,77 @@
     showStatus("ใส่ไอคอนสำเร็จ");
   }
 
-  // จัดการสไลเดอร์ มีช่องกรอกหัวข้อสไลเดอร์ และคำอธิบายใต้รูป
-  function renderSliderManager() {
-    const box = document.getElementById("sliderManager");
+  // สร้างหมวดจัดการ 5 กรอบใหญ่สไลเดอร์ผลงาน
+  function renderAllSlidersAdmin() {
+    const mainBox = document.getElementById("adminAllSlidersContainer");
+    mainBox.innerHTML = "";
+
+    for (let sIdx = 0; sIdx < TOTAL_SECTIONS; sIdx++) {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <div class="title">4.${sIdx + 1} จัดการสไลเดอร์กรอบที่ ${sIdx + 1}</div>
+        <div class="field-group">
+          <label class="field-label">หัวข้อสไลเดอร์กรอบนี้</label>
+          <input type="text" class="input-box" id="sliderHeading_${sIdx}" value="${sliderHeadings[sIdx]}" oninput="sliderHeadings[${sIdx}] = this.value" placeholder="รวมกลุ่มของตกแต่ง ${sIdx + 1}">
+        </div>
+        <div id="sliderItemsList_${sIdx}"></div>
+        <button type="button" class="btn-add" onclick="addNewSliderItem(${sIdx})">+ เพิ่มภาพสไลด์ในกรอบที่ ${sIdx + 1}</button>
+      `;
+      mainBox.appendChild(card);
+      renderSliderItemsList(sIdx);
+    }
+  }
+
+  function renderSliderItemsList(sIdx) {
+    const box = document.getElementById(`sliderItemsList_${sIdx}`);
     box.innerHTML = "";
-    sliderPostsData.forEach((item, idx) => {
+    sliderSectionsData[sIdx].forEach((item, idx) => {
       const wrap = document.createElement("div");
       wrap.className = "item-card";
       wrap.innerHTML = `
         <div class="item-header">
-          <span style="font-weight:700; color:var(--color-pink-text);">ภาพสไลด์ที่ ${idx+1}</span>
-          <button type="button" class="del-btn" onclick="removeSliderItem(${idx})">ลบภาพนี้ ✕</button>
+          <span style="font-weight:700; color:var(--color-pink-text);">ภาพสไลด์ที่ ${idx + 1}</span>
+          <button type="button" class="del-btn" onclick="removeSliderItem(${sIdx}, ${idx})">ลบภาพนี้ ✕</button>
         </div>
         <div class="field-group">
           <label class="field-label">รูปภาพสไลด์</label>
-          <label class="file-btn">เลือกรูปสไลด์จากเครื่อง <input type="file" accept="image/*" style="display:none;" onchange="uploadSliderImage(event, ${idx})"></label>
-          <input type="text" class="input-box" id="slide-img-${idx}" value="${item.image || ''}" placeholder="หรือวางลิงก์รูป" oninput="sliderPostsData[${idx}].image = this.value">
+          <label class="file-btn">เลือกรูปสไลด์จากเครื่อง <input type="file" accept="image/*" style="display:none;" onchange="uploadSliderImage(event, ${sIdx}, ${idx})"></label>
+          <input type="text" class="input-box" id="slide-img-${sIdx}-${idx}" value="${item.image || ''}" placeholder="หรือวางลิงก์รูป" oninput="sliderSectionsData[${sIdx}][${idx}].image = this.value">
         </div>
         <div class="field-group">
           <label class="field-label">คำอธิบายใต้รูป</label>
-          <input type="text" class="input-box" value="${item.desc || ''}" placeholder="พิมพ์คำอธิบายใต้รูปภาพ..." oninput="sliderPostsData[${idx}].desc = this.value">
+          <input type="text" class="input-box" value="${item.desc || ''}" placeholder="พิมพ์คำอธิบายใต้รูปภาพ..." oninput="sliderSectionsData[${sIdx}][${idx}].desc = this.value">
         </div>
         <div class="field-group">
           <label class="field-label">ข้อความบนปุ่ม</label>
-          <input type="text" class="input-box" value="${item.btnText || 'ex'}" placeholder="ex" oninput="sliderPostsData[${idx}].btnText = this.value">
+          <input type="text" class="input-box" value="${item.btnText || 'ex'}" placeholder="ex" oninput="sliderSectionsData[${sIdx}][${idx}].btnText = this.value">
         </div>
         <div class="field-group">
           <label class="field-label">ลิงก์เมื่อกดปุ่ม (ถ้ามี)</label>
-          <input type="text" class="input-box" value="${item.link || ''}" placeholder="https://..." oninput="sliderPostsData[${idx}].link = this.value">
+          <input type="text" class="input-box" value="${item.link || ''}" placeholder="https://..." oninput="sliderSectionsData[${sIdx}][${idx}].link = this.value">
         </div>
       `;
       box.appendChild(wrap);
     });
   }
-  function addNewSliderItem() { sliderPostsData.push({ image: "", desc: "", btnText: "ex", link: "" }); renderSliderManager(); }
-  function removeSliderItem(idx) { sliderPostsData.splice(idx, 1); renderSliderManager(); }
-  async function uploadSliderImage(event, idx) {
+
+  function addNewSliderItem(sIdx) {
+    sliderSectionsData[sIdx].push({ image: "", desc: "", btnText: "ex", link: "" });
+    renderSliderItemsList(sIdx);
+  }
+
+  function removeSliderItem(sIdx, idx) {
+    sliderSectionsData[sIdx].splice(idx, 1);
+    renderSliderItemsList(sIdx);
+  }
+
+  async function uploadSliderImage(event, sIdx, idx) {
     const file = event.target.files[0];
     if (!file) return;
     const base64 = await compressHDImage(file, 1080, 0.9);
-    sliderPostsData[idx].image = base64;
-    document.getElementById(`slide-img-${idx}`).value = base64;
+    sliderSectionsData[sIdx][idx].image = base64;
+    document.getElementById(`slide-img-${sIdx}-${idx}`).value = base64;
     showStatus("ใส่รูปสไลด์สำเร็จ");
   }
 
@@ -457,7 +500,6 @@
       bio: document.getElementById("storeBio").value.trim(),
       bannerImg: document.getElementById("bannerImg").value.trim(),
       profileImg: document.getElementById("profileImg").value.trim(),
-      sliderHeading: document.getElementById("sliderHeadingInput").value.trim() || "รวมกลุ่มของตกแต่ง",
       musicUrl: document.getElementById("musicUrl").value.trim(),
       adminEmail: currentAdminEmail,
       updatedAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -472,6 +514,7 @@
     try {
       await db.collection(DB_CONFIG).doc("main").set(payload, { merge: true });
 
+      // 1. บันทึกรูปคู่ 2 ช่อง
       const duoBatch = db.batch();
       const duoExisting = await db.collection(DB_DUO).get();
       duoExisting.forEach(d => duoBatch.delete(d.ref));
@@ -482,6 +525,7 @@
         }
       }
 
+      // 2. บันทึก 6 กรอบเล็ก
       const boxBatch = db.batch();
       const boxExisting = await db.collection(DB_BOXES).get();
       boxExisting.forEach(d => boxBatch.delete(d.ref));
@@ -495,24 +539,36 @@
         });
       }
 
-      const sliderBatch = db.batch();
-      const sliderExisting = await db.collection(DB_SLIDER).get();
-      sliderExisting.forEach(d => sliderBatch.delete(d.ref));
-      await sliderBatch.commit();
-      for (let i = 0; i < sliderPostsData.length; i++) {
-        if (sliderPostsData[i].image) {
-          await db.collection(DB_SLIDER).add({
-            order: i,
-            image: sliderPostsData[i].image,
-            desc: sliderPostsData[i].desc || "",
-            btnText: sliderPostsData[i].btnText || "ex",
-            link: sliderPostsData[i].link || ""
-          });
+      // 3. บันทึกสไลเดอร์ทั้ง 5 กรอบใหญ่
+      for (let sIdx = 0; sIdx < TOTAL_SECTIONS; sIdx++) {
+        // บันทึกหัวข้อ
+        await db.collection(DB_CONFIG).doc(`slider_meta_${sIdx}`).set({
+          heading: sliderHeadings[sIdx] || `รวมกลุ่มของตกแต่ง ${sIdx + 1}`
+        }, { merge: true });
+
+        // บันทึกรายการสไลด์
+        const sColl = `littlemeow_slider_section_${sIdx}`;
+        const sBatch = db.batch();
+        const existingDocs = await db.collection(sColl).get();
+        existingDocs.forEach(d => sBatch.delete(d.ref));
+        await sBatch.commit();
+
+        for (let i = 0; i < sliderSectionsData[sIdx].length; i++) {
+          const item = sliderSectionsData[sIdx][i];
+          if (item.image) {
+            await db.collection(sColl).add({
+              order: i,
+              image: item.image,
+              desc: item.desc || "",
+              btnText: item.btnText || "ex",
+              link: item.link || ""
+            });
+          }
         }
       }
 
       showStatus("บันทึกข้อมูลทั้งหมดสำเร็จแล้ว");
-      alert("✨ บันทึกข้อมูลสำเร็จเรียบร้อยแล้วค่ะ! หัวข้อสไลเดอร์และข้อมูลอัปเดตทันที ♡");
+      alert("✨ บันทึกข้อมูลสำเร็จเรียบร้อยแล้วค่ะ! กรอบใหญ่ทั้ง 5 อันอัปเดตทันที ♡");
       document.getElementById("newAdminPassword").value = "";
     } catch (err) {
       showStatus("บันทึกไม่สำเร็จ: " + err.message, true);
