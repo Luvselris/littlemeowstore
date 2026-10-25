@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title id="pageTitle">Littlemeow store ♡</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+  <style>
+    :root {
+      /* โทนสีตามภาพ: ชมพูสดใส + เขียวมะนาว + ครีมวานิลลา */
+      --color-pink: #f79cd2;
+      --color-pink-dark: #ea66b5;
+      --color-green: #9de659;
+      --color-green-dark: #7acb32;
+      --color-cream: #fcf7ed;
+      --color-cream-soft: #fbf3e4;
+      
+      --card-white: #ffffff;
+      --border-dark: #2c2527;
+      --text-main: #34282c;
+      --text-muted: #756269;
+      --shadow-cute: 0 8px 24px rgba(247, 156, 210, 0.22);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Quicksand', 'Mitr', sans-serif; -webkit-tap-highlight-color: transparent; }
+    
+    body {
+      background: radial-gradient(circle at top, #fffdfa 0%, var(--color-cream) 55%, #faecf4 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 20px 12px 60px;
+    }
+
+    .main-wrap {
+      width: 100%;
+      max-width: 440px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: relative;
+    }
+
+    .music-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      z-index: 10;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 2px solid var(--border-dark);
+      color: var(--color-pink-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    /* 1. ปก + โปรไฟล์คาบเกี่ยว + Detail */
+    .header-group {
+      position: relative;
+      background: var(--card-white);
+      border: 2.5px solid var(--border-dark);
+      border-radius: 26px;
+      overflow: hidden;
+      box-shadow: var(--shadow-cute);
+    }
+
+    .banner-box {
+      width: 100%;
+      height: 175px;
+      background: var(--color-cream-soft);
+      overflow: hidden;
+      border-bottom: 2px solid var(--border-dark);
+    }
+    .banner-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .profile-circle-wrap {
+      width: 104px;
+      height: 104px;
+      border-radius: 50%;
+      border: 3px solid var(--border-dark);
+      background: #fff;
+      overflow: hidden;
+      margin: -52px auto 0;
+      position: relative;
+      z-index: 2;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+    }
+    .profile-circle-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .detail-box {
+      padding: 12px 18px 22px;
+      text-align: center;
+      background: #ffffff;
+    }
+    .store-title {
+      font-size: 21px;
+      font-weight: 700;
+      color: var(--color-pink-dark);
+      letter-spacing: 0.5px;
+    }
+    .store-bio {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      margin-top: 6px;
+      line-height: 1.6;
+      white-space: pre-line;
+    }
+
+    /* 2. รูปคู่ 2 ช่อง ซ้าย-ขวา */
+    .duo-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    .duo-card-item {
+      background: var(--card-white);
+      border: 2.5px solid var(--border-dark);
+      border-radius: 20px;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      box-shadow: var(--shadow-cute);
+      cursor: pointer;
+    }
+    .duo-card-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.2s;
+    }
+    .duo-card-item:active img { transform: scale(0.96); }
+
+    /* 3. กรอบใหญ่บรรจุ 6 กรอบเล็ก */
+    .big-container-box {
+      background: var(--card-white);
+      border: 2.5px solid var(--border-dark);
+      border-radius: 26px;
+      padding: 16px;
+      box-shadow: var(--shadow-cute);
+    }
+    .inner-small-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    .mini-link-card {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 10px;
+      background: var(--color-cream);
+      border: 2px solid var(--border-dark);
+      border-radius: 16px;
+      text-decoration: none;
+      color: var(--text-main);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.04);
+      transition: transform 0.15s, background 0.15s;
+    }
+    .mini-link-card:active { transform: scale(0.97); }
+    .mini-link-card:nth-child(even) {
+      background: #fdf2f8; /* สลับโทนชมพูอ่อนน่ารัก */
+    }
+    .mini-icon-box {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      border: 1.5px solid var(--border-dark);
+      background: #fff;
+      overflow: hidden;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+    }
+    .mini-icon-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .mini-text-box {
+      font-size: 12.5px;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* 4. สไลเดอร์เลื่อน ซ้าย-ขวา */
+    .slider-section-card {
+      background: var(--card-white);
+      border: 2.5px solid var(--border-dark);
+      border-radius: 26px;
+      padding: 16px;
+      box-shadow: var(--shadow-cute);
+      position: relative;
+    }
+    .slider-hint-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--color-green-dark);
+      text-align: right;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 4px;
+    }
+    .carousel-wrap {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      padding-bottom: 8px;
+      scrollbar-width: none;
+    }
+    .carousel-wrap::-webkit-scrollbar { display: none; }
+    .carousel-slide-item {
+      flex: 0 0 240px;
+      scroll-snap-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 9px;
+    }
+    .carousel-img-frame {
+      width: 100%;
+      height: 180px;
+      border: 2px solid var(--border-dark);
+      border-radius: 20px;
+      overflow: hidden;
+      background: var(--color-cream);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+    }
+    .carousel-img-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .btn-ex-label {
+      display: inline-block;
+      padding: 5px 22px;
+      border: 2px solid var(--border-dark);
+      border-radius: 14px;
+      background: var(--color-green);
+      font-size: 12px;
+      font-weight: 700;
+      color: #1a3307;
+      text-decoration: none;
+      box-shadow: 0 3px 8px rgba(157, 230, 89, 0.4);
+    }
+
+    /* Modal ขยายรูป */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(6px);
+      z-index: 999999;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-box {
+      background: #fff;
+      border-radius: 24px;
+      border: 2.5px solid var(--border-dark);
+      max-width: 380px;
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+    }
+    .modal-box img {
+      width: 100%;
+      max-height: 420px;
+      object-fit: contain;
+      background: #000;
+      display: block;
+    }
+    .modal-close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.55);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- เพลง Ariana Grande - God is a woman -->
+  <audio id="bgMusic" loop autoplay preload="auto" playsinline src="https://file.garden/asG8Gt-rqWIpi3II/Ariana%20Grande%20-%20God%20is%20a%20woman%20(Official%20Video).mp3"></audio>
+
+  <div class="main-wrap">
+    
+    <button type="button" class="music-btn" onclick="toggleMusic()">🎵</button>
+
+    <!-- 1. ส่วนบน: ปก + โปรไฟล์คาบเกี่ยว + รายละเอียด -->
+    <div class="header-group">
+      <div class="banner-box">
+        <img id="mainBanner" src="https://file.garden/asG8Gt-rqWIpi3II/line_oa_chat_261025_142526.jpeg" alt="Banner">
+      </div>
+      <div class="profile-circle-wrap">
+        <img id="mainProfile" src="https://file.garden/asG8Gt-rqWIpi3II/line_oa_chat_261025_142322.jpeg" alt="Profile">
+      </div>
+      <div class="detail-box">
+        <h1 class="store-title" id="mainStoreName">Littlemeow store ♡</h1>
+        <p class="store-bio" id="mainStoreBio">welcome to Littlemeow store ♡
+ยินดีต้อนรับคุณลูกค้าทุกท่านนะคะ แตะดูรายละเอียดและผลงานได้เลยค่ะ</p>
+      </div>
+    </div>
+
+    <!-- 2. ส่วนกลางบน: รูปคู่ 2 ช่อง ซ้าย-ขวา -->
+    <div class="duo-cards-grid" id="duoCardsContainer"></div>
+
+    <!-- 3. ส่วนกลางล่าง: กรอบใหญ่ มีกรอบเล็กย่อยด้านใน (6 ช่องขึ้นไป) -->
+    <div class="big-container-box">
+      <div class="inner-small-grid" id="smallBoxesContainer"></div>
+    </div>
+
+    <!-- 4. ส่วนล่างสุด: สไลเดอร์เลื่อน ซ้าย-ขวา -->
+    <div class="slider-section-card">
+      <div class="slider-hint-label">เลื่อน ⟵ ⟶</div>
+      <div class="carousel-wrap" id="sliderContainer"></div>
+    </div>
+
+  </div>
+
+  <!-- Modal ขยายรูปภาพ -->
+  <div class="modal-overlay" id="imgModal" onclick="closeImgModal()">
+    <div class="modal-box" onclick="event.stopPropagation()">
+      <button class="modal-close-btn" onclick="closeImgModal()">✕</button>
+      <img id="modalImgTag" src="" alt="Zoom Image">
+    </div>
+  </div>
+
+  <script>
+    const DB_CONFIG = "littlemeow_site_config";
+    const DB_DUO = "littlemeow_banner_cards";
+    const DB_BOXES = "littlemeow_contact_boxes";
+    const DB_SLIDER = "littlemeow_slider_posts";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCpAGDSy1NRgmLV_g7qJrCpwOhU9MrfQyY",
+      authDomain: "benefitie.firebaseapp.com",
+      projectId: "benefitie",
+      storageBucket: "benefitie.firebasestorage.app",
+      messagingSenderId: "270365672215",
+      appId: "1:270365672215:web:230d1491091e26ce83ed52"
+    };
+
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const music = document.getElementById("bgMusic");
+    let audioContext;
+
+    function startMusic() {
+      if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioContext.state === 'suspended') audioContext.resume();
+      if (music.paused) music.play().catch(() => {});
+    }
+
+    function toggleMusic() {
+      if (music.paused) music.play().catch(() => {});
+      else music.pause();
+    }
+
+    window.addEventListener('load', startMusic);
+    document.addEventListener('DOMContentLoaded', startMusic);
+    ['touchstart', 'touchend', 'click', 'scroll', 'pointerdown'].forEach(evt => {
+      document.addEventListener(evt, function trigger() {
+        startMusic();
+        document.removeEventListener(evt, trigger);
+      }, { passive: true });
+    });
+
+    // 1. ดึงข้อมูลส่วนหัว
+    db.collection(DB_CONFIG).doc("main").onSnapshot(doc => {
+      if (doc.exists) {
+        const d = doc.data();
+        if (d.storeName) {
+          document.getElementById("pageTitle").textContent = d.storeName;
+          document.getElementById("mainStoreName").textContent = d.storeName;
+        }
+        if (d.bio !== undefined) document.getElementById("mainStoreBio").textContent = d.bio;
+        if (d.bannerImg) document.getElementById("mainBanner").src = d.bannerImg;
+        if (d.profileImg) document.getElementById("mainProfile").src = d.profileImg;
+        if (d.musicUrl && !music.src.endsWith(d.musicUrl)) {
+          music.src = d.musicUrl;
+          startMusic();
+        }
+      }
+    });
+
+    // 2. ดึงรูปคู่ 2 ช่อง ซ้าย-ขวา
+    db.collection(DB_DUO).orderBy("order", "asc").onSnapshot(snap => {
+      const container = document.getElementById("duoCardsContainer");
+      container.innerHTML = "";
+      if (snap.empty) {
+        container.style.display = "none";
+        return;
+      }
+      container.style.display = "grid";
+      snap.forEach(doc => {
+        const d = doc.data();
+        const div = document.createElement("div");
+        div.className = "duo-card-item";
+        div.onclick = () => openImgModal(d.image);
+        div.innerHTML = `<img src="${d.image}" alt="Card">`;
+        container.appendChild(div);
+      });
+    });
+
+    // 3. ดึงกรอบเล็กในกรอบใหญ่ (6 กรอบขึ้นไป)
+    db.collection(DB_BOXES).orderBy("order", "asc").onSnapshot(snap => {
+      const container = document.getElementById("smallBoxesContainer");
+      container.innerHTML = "";
+      if (snap.empty) {
+        container.innerHTML = `<p style="grid-column: span 2; text-align:center; font-size:12px; color:var(--text-muted); padding:10px;">ยังไม่มีรายการ</p>`;
+        return;
+      }
+      snap.forEach(doc => {
+        const d = doc.data();
+        const a = document.createElement("a");
+        a.className = "mini-link-card";
+        a.href = d.url || "#";
+        if (d.url && d.url.startsWith("http")) a.target = "_blank";
+        
+        let iconHtml = d.icon ? `<img src="${d.icon}" alt="icon">` : `<span>✿</span>`;
+        a.innerHTML = `
+          <div class="mini-icon-box">${iconHtml}</div>
+          <div class="mini-text-box">${d.title || 'กล่องข้อความ'}</div>
+        `;
+        container.appendChild(a);
+      });
+    });
+
+    // 4. ดึงสไลเดอร์เลื่อน ซ้าย-ขวา
+    db.collection(DB_SLIDER).orderBy("order", "asc").onSnapshot(snap => {
+      const container = document.getElementById("sliderContainer");
+      container.innerHTML = "";
+      if (snap.empty) {
+        container.innerHTML = `<p style="text-align:center; font-size:12px; color:var(--text-muted); padding:20px; width:100%;">ยังไม่มีผลงานในสไลด์</p>`;
+        return;
+      }
+      snap.forEach(doc => {
+        const d = doc.data();
+        const div = document.createElement("div");
+        div.className = "carousel-slide-item";
+        div.innerHTML = `
+          <div class="carousel-img-frame" onclick="openImgModal('${d.image}')">
+            <img src="${d.image}" alt="Slide">
+          </div>
+          <a href="${d.link || 'javascript:void(0)'}" ${d.link && d.link.startsWith('http') ? 'target="_blank"' : ''} class="btn-ex-label">
+            ${d.btnText || 'ex'}
+          </a>
+        `;
+        container.appendChild(div);
+      });
+    });
+
+    function openImgModal(src) {
+      if (!src) return;
+      document.getElementById("modalImgTag").src = src;
+      document.getElementById("imgModal").classList.add("active");
+    }
+    function closeImgModal() {
+      document.getElementById("imgModal").classList.remove("active");
+    }
+  </script>
+</body>
+</html>
