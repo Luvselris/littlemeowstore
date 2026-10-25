@@ -12,20 +12,23 @@
 
   <style>
     :root {
-      --color-pink: #f79cd2;
-      --color-pink-dark: #ea66b5;
-      --color-green: #9de659;
-      --color-green-dark: #7acb32;
-      --color-cream: #fcf7ed;
-      --border-dark: #2c2527;
-      --text-main: #34282c;
-      --text-muted: #756269;
+      --color-pink-soft: #fed5ea;
+      --color-pink-main: #fbaed8;
+      --color-pink-text: #e060a7;
+      
+      --color-green-main: #abeb6a;
+      --color-green-dark: #4b8015;
+      --color-cream: #fdfaf3;
+      
+      --border-dark: #2a1f24;
+      --text-main: #2b2226;
+      --text-muted: #7d6b73;
       --danger: #ef4444;
-      --shadow-cute: 0 8px 24px rgba(247, 156, 210, 0.22);
+      --shadow-cute: 0 8px 24px rgba(42, 31, 36, 0.08);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Quicksand', 'Mitr', sans-serif; }
     body {
-      background: radial-gradient(circle at top, #fffdfa 0%, var(--color-cream) 55%, #faecf4 100%);
+      background: radial-gradient(circle at top, #ffffff 0%, var(--color-cream) 55%, #fdf2f7 100%);
       color: var(--text-main);
       min-height: 100vh;
       padding: 20px 14px 80px;
@@ -42,7 +45,7 @@
       border: 2.5px solid var(--border-dark);
       margin-bottom: 16px;
     }
-    .title { font-size: 17px; font-weight: 700; color: var(--color-pink-dark); text-align: center; margin-bottom: 16px; }
+    .title { font-size: 17px; font-weight: 700; color: var(--color-pink-text); text-align: center; margin-bottom: 16px; }
     .field-group { margin-bottom: 14px; }
     .field-label { font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 6px; display: block; }
     
@@ -50,21 +53,21 @@
       width: 100%; padding: 11px 14px; border-radius: 14px; border: 2px solid var(--border-dark);
       outline: none; font-size: 13.5px; background: #fffdfa; color: var(--text-main);
     }
-    .input-box:focus, .textarea-box:focus { border-color: var(--color-pink-dark); }
+    .input-box:focus, .textarea-box:focus { border-color: var(--color-pink-text); }
     .textarea-box { resize: vertical; min-height: 80px; line-height: 1.5; }
 
     .file-btn {
       display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-      padding: 9px 14px; background: #fdf2f8; border: 2px dashed var(--color-pink-dark);
-      border-radius: 14px; color: var(--color-pink-dark); font-size: 12.5px; font-weight: 700;
+      padding: 9px 14px; background: var(--color-pink-soft); border: 2px dashed var(--color-pink-text);
+      border-radius: 14px; color: var(--color-pink-text); font-size: 12.5px; font-weight: 700;
       cursor: pointer; width: 100%; margin-bottom: 6px;
     }
 
     .btn {
       width: 100%; padding: 13px; border-radius: 18px; border: 2px solid var(--border-dark);
       font-size: 14.5px; font-weight: 700; cursor: pointer;
-      background: linear-gradient(135deg, var(--color-pink), var(--color-pink-dark));
-      color: #fff; margin-top: 6px; box-shadow: 0 4px 14px rgba(234, 102, 181, 0.35);
+      background: linear-gradient(135deg, var(--color-pink-main), var(--color-pink-text));
+      color: #fff; margin-top: 6px; box-shadow: 0 4px 14px rgba(224, 96, 167, 0.3);
     }
     .btn:disabled { opacity: 0.6; cursor: not-allowed; }
     .btn-secondary { background: #fff; color: var(--border-dark); border: 2px solid var(--border-dark); margin-top: 10px; box-shadow: none; }
@@ -98,7 +101,6 @@
 
 <div class="container">
   
-  <!-- ล็อกอินแอดมิน: ใช้ป้าย email & password -->
   <div class="card" id="loginBox">
     <div class="title">เข้าสู่ระบบแอดมิน ♡ Littlemeow store</div>
     <div class="field-group">
@@ -112,10 +114,8 @@
     <button type="button" class="btn" onclick="handleLogin()">เข้าสู่ระบบ</button>
   </div>
 
-  <!-- แดชบอร์ด -->
   <div id="dashboardBox" class="hidden">
     
-    <!-- 1. ข้อมูลส่วนบนสุด (ปก แบนเนอร์ โปรไฟล์ ชื่อ ไบโอ) -->
     <div class="card">
       <div class="title">1. ข้อมูลส่วนหัว & รายละเอียด</div>
       <div class="field-group">
@@ -140,28 +140,24 @@
       </div>
     </div>
 
-    <!-- 2. รูปคู่ 2 ช่อง ซ้าย-ขวา -->
     <div class="card">
       <div class="title">2. จัดการรูปคู่ 2 ช่อง (เพิ่ม/ลบได้ไม่จำกัด)</div>
       <div id="duoManager"></div>
       <button type="button" class="btn-add" onclick="addNewDuoCard()">+ เพิ่มรูปใหม่</button>
     </div>
 
-    <!-- 3. กรอบใหญ่บรรจุ 6 กรอบเล็ก -->
     <div class="card">
       <div class="title">3. จัดการกรอบเล็กในกรอบใหญ่ (6 กรอบ)</div>
       <div id="boxesManager"></div>
       <button type="button" class="btn-add" onclick="addNewBox()">+ เพิ่มกรอบเล็กใหม่</button>
     </div>
 
-    <!-- 4. สไลเดอร์เลื่อน ซ้าย-ขวา -->
     <div class="card">
-      <div class="title">4. จัดการสไลเดอร์ผลงาน (เลื่อน ซ้าย-ขวา)</div>
+      <div class="title">4. จัดการสไลเดอร์ผลงาน (สี่เหลี่ยมจัตุรัสตามภาพ 1:1)</div>
       <div id="sliderManager"></div>
       <button type="button" class="btn-add" onclick="addNewSliderItem()">+ เพิ่มภาพในสไลเดอร์</button>
     </div>
 
-    <!-- 5. เพลงประกอบ -->
     <div class="card">
       <div class="title">5. เพลงประกอบร้าน (.mp3)</div>
       <div class="field-group">
@@ -170,7 +166,6 @@
       </div>
     </div>
 
-    <!-- 6. บัญชีแอดมิน -->
     <div class="card">
       <div class="title">6. บัญชีและความปลอดภัยแอดมิน</div>
       <div class="field-group">
@@ -226,7 +221,7 @@
   function showStatus(text, isError = false) {
     const el = document.getElementById("statusMsg");
     el.textContent = text;
-    el.style.background = isError ? "#ef4444" : "#2c2527";
+    el.style.background = isError ? "#ef4444" : "#2a1f24";
     el.style.display = "block";
     setTimeout(() => { el.style.display = "none"; }, 3000);
   }
@@ -331,7 +326,6 @@
     }
   }
 
-  // จัดการรูปคู่ 2 ช่อง
   function renderDuoManager() {
     const box = document.getElementById("duoManager");
     box.innerHTML = "";
@@ -340,7 +334,7 @@
       wrap.className = "item-card";
       wrap.innerHTML = `
         <div class="item-header">
-          <span style="font-weight:700; color:var(--color-pink-dark);">รูปที่ ${idx+1}</span>
+          <span style="font-weight:700; color:var(--color-pink-text);">รูปที่ ${idx+1}</span>
           <button type="button" class="del-btn" onclick="removeDuoCard(${idx})">ลบรูปนี้ ✕</button>
         </div>
         <label class="file-btn">เลือกรูปจากเครื่อง <input type="file" accept="image/*" style="display:none;" onchange="uploadDuoImage(event, ${idx})"></label>
@@ -360,7 +354,6 @@
     showStatus("ใส่รูปสำเร็จ");
   }
 
-  // จัดการ 6 กรอบเล็ก
   function renderBoxesManager() {
     const box = document.getElementById("boxesManager");
     box.innerHTML = "";
@@ -369,7 +362,7 @@
       wrap.className = "item-card";
       wrap.innerHTML = `
         <div class="item-header">
-          <span style="font-weight:700; color:var(--color-pink-dark);">กรอบเล็กที่ ${idx+1}</span>
+          <span style="font-weight:700; color:var(--color-pink-text);">กรอบเล็กที่ ${idx+1}</span>
           <button type="button" class="del-btn" onclick="removeBoxItem(${idx})">ลบกรอบนี้ ✕</button>
         </div>
         <div class="field-group">
@@ -400,7 +393,6 @@
     showStatus("ใส่ไอคอนสำเร็จ");
   }
 
-  // จัดการสไลเดอร์
   function renderSliderManager() {
     const box = document.getElementById("sliderManager");
     box.innerHTML = "";
@@ -409,7 +401,7 @@
       wrap.className = "item-card";
       wrap.innerHTML = `
         <div class="item-header">
-          <span style="font-weight:700; color:var(--color-pink-dark);">ภาพสไลด์ที่ ${idx+1}</span>
+          <span style="font-weight:700; color:var(--color-pink-text);">ภาพสไลด์ที่ ${idx+1} (ทรงสี่เหลี่ยมจัตุรัส 1:1)</span>
           <button type="button" class="del-btn" onclick="removeSliderItem(${idx})">ลบภาพนี้ ✕</button>
         </div>
         <div class="field-group">
@@ -468,7 +460,6 @@
     try {
       await db.collection(DB_CONFIG).doc("main").set(payload, { merge: true });
 
-      // บันทึกรูปคู่ 2 ช่อง
       const duoBatch = db.batch();
       const duoExisting = await db.collection(DB_DUO).get();
       duoExisting.forEach(d => duoBatch.delete(d.ref));
@@ -479,7 +470,6 @@
         }
       }
 
-      // บันทึก 6 กรอบเล็ก
       const boxBatch = db.batch();
       const boxExisting = await db.collection(DB_BOXES).get();
       boxExisting.forEach(d => boxBatch.delete(d.ref));
@@ -493,7 +483,6 @@
         });
       }
 
-      // บันทึกสไลเดอร์
       const sliderBatch = db.batch();
       const sliderExisting = await db.collection(DB_SLIDER).get();
       sliderExisting.forEach(d => sliderBatch.delete(d.ref));
@@ -510,7 +499,7 @@
       }
 
       showStatus("บันทึกข้อมูลทั้งหมดสำเร็จแล้ว");
-      alert("✨ บันทึกข้อมูลสำเร็จเรียบร้อยแล้วค่ะ! โทนสีและข้อมูลอัปเดตทันที ♡");
+      alert("✨ บันทึกข้อมูลสำเร็จเรียบร้อยแล้วค่ะ! กรอบสี่เหลี่ยมจัตุรัสแสดงผลทันที ♡");
       document.getElementById("newAdminPassword").value = "";
     } catch (err) {
       showStatus("บันทึกไม่สำเร็จ: " + err.message, true);
